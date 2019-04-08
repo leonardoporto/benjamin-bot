@@ -18,6 +18,8 @@ app.post('/group/:group', (req, res) => {
         params,
         body
     } = req;
+
+    console.log(body);
     
     // template de mensagens
     const templates = {
