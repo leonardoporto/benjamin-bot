@@ -23,7 +23,7 @@ app.post('/group/:group', (req, res) => {
     
     // template de mensagens
     const templates = {
-        "merge_request": "[${object_attributes.action}] ${object_attributes.assignee.name}  Merge Request\n${object_attributes.url}",
+        "merge_request": "[${object_attributes.state}] ${assignee.name}  Merge Request\n${object_attributes.url}",
         "note": "Novo comentário em um merge request\n${object_attributes.url}"
     }
     
