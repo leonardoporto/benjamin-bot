@@ -2,6 +2,8 @@ require('dotenv').config();
 const Telegraf = require('telegraf/telegram');
 const express = require('express');
 const _ = require('lodash');
+const NodeCache = require('node-cache');
+const cache = new NodeCache({ stdTTL: 120, checkperiod: 120 });
 
 const app = express();
 
@@ -20,11 +22,24 @@ app.post('/group/:group', (req, res) => {
     } = req;
 
     console.log(JSON.stringify(body));
+
+    if(['opened'].indexOf(body.object_attributes.state) === -1) {
+        res.status(200).send('Ok');
+        return;
+    }
+
+    const exists = cache.get(`merge_${body.object_attributes.idd}`);
+
+    if(exists !== undefined) {
+        res.status(200).send('Ok');
+        return;
+    }
+
+    cache.set(`merge_${body.object_attributes.idd}`, body.object_attributes.idd);
     
     // template de mensagens
     const templates = {
-        "merge_request": "[${object_attributes.state}] ${assignee.name}  Merge Request\n${object_attributes.url}",
-        "note": "Novo comentário em um merge request\n${object_attributes.url}"
+        "merge_request": "${assignee.name} abriu uma solicitação de Merge Request\n${object_attributes.url}"
     }
     
     const message = _.template(templates[body.object_kind]);
