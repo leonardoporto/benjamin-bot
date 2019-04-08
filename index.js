@@ -19,7 +19,7 @@ app.post('/group/:group', (req, res) => {
         body
     } = req;
 
-    console.log(body);
+    console.log(JSON.stringify(body));
     
     // template de mensagens
     const templates = {
