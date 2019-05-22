@@ -28,18 +28,18 @@ app.post('/group/:group', (req, res) => {
         return;
     }
 
-    const exists = cache.get(`merge_${body.object_attributes.idd}`);
+    const exists = cache.get(`merge_${body.object_attributes.id}`);
 
     if(exists !== undefined) {
         res.status(200).send('Ok');
         return;
     }
 
-    cache.set(`merge_${body.object_attributes.idd}`, body.object_attributes.idd);
+    cache.set(`merge_${body.object_attributes.id}`, body.object_attributes.id);
     
     // template de mensagens
     const templates = {
-        "merge_request": "${assignee.name} abriu uma solicitação de Merge Request\n${object_attributes.url}"
+        "merge_request": "${assignees[0].name} abriu uma solicitação de Merge Request\n${object_attributes.url}"
     }
     
     const message = _.template(templates[body.object_kind]);
